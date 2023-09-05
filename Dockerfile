@@ -1,6 +1,4 @@
-###################
 # BUILD FOR LOCAL DEVELOPMENT
-###################
 
 FROM node:18-alpine As development
 
@@ -21,9 +19,7 @@ COPY --chown=node:node . .
 # Use the node user from the image (instead of the root user)
 USER node
 
-###################
 # BUILD FOR PRODUCTION
-###################
 
 FROM node:18-alpine As build
 
@@ -52,9 +48,7 @@ RUN npm ci --only=production && npm cache clean --force
 
 USER node
 
-###################
 # PRODUCTION
-###################
 
 FROM node:18-alpine As production
 
