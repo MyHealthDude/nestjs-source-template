@@ -27,5 +27,5 @@ jobs:
           file: ./Dockerfile
           target: development
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME}}/${{github.event.repository}}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME}}/${{github.event.repository.name}}:latest
           
