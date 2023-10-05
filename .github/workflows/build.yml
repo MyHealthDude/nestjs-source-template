@@ -2,6 +2,8 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
+  push:
+    branches: [feat/create-github-action]
 jobs:
   build:
     name: Build Docker image
@@ -21,12 +23,11 @@ jobs:
           uses: docker/setup-buildx-action@v3
       -
         name: Build and push
-        run: echo ${{ secrets.DOCKERHUB_USERNAME}}
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           target: development
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME}}/nestjs-source-template:latest
+          tags: aldorea/nestjs-source-template:latest
           
