@@ -23,18 +23,18 @@ jobs:
         run: |
           repo_full_name="$GITHUB_REPOSITORY"
           IFS='/' read -ra repo_parts <<< "$repo_full_name"
-          echo "repo_name=${repo_parts[1]}" >> $GITHUB_ENV
+          echo "REPO_NAME=${repo_parts[1]}" >> $GITHUB_ENV
 
       -
         name: Echo repository name
-        run: echo ${{env.repo_name}}
+        run: echo ${{env.REPO_NAME}}
       - 
         name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/$repo_name
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{env.REPO_NAME}}}
           tags: |
             type=sha,format=short 
 
