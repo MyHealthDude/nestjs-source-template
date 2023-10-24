@@ -25,14 +25,18 @@ jobs:
           IFS='/' read -ra repo_parts <<< "$repo_full_name"
           repo_name="${repo_parts[1]}"
           echo "Repository name: $repo_name"
-
+      -
+        name: Echo repository name
+        run: echo $repo_name
       - 
         name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: |
-            "${{ secrets.DOCKERHUB_USERNAME }}/$repo_name"
+            ${{ secrets.DOCKERHUB_USERNAME }}/$repo_name:${{ github.sha }}
+          tags: |
+            type=sha,format=short 
 
       -
         name: Build and push
