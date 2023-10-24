@@ -18,13 +18,21 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Get repository name
+        run: |
+          repo_full_name="$GITHUB_REPOSITORY"
+          IFS='/' read -ra repo_parts <<< "$repo_full_name"
+          repo_name="${repo_parts[1]}"
+          echo "Repository name: $repo_name"
+
       - 
         name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-source-template
+            ${{ secrets.DOCKERHUB_USERNAME }}/$repo_name
 
       -
         name: Build and push
