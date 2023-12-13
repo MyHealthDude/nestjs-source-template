@@ -1,29 +1,34 @@
+# This workflow is triggered when a pull request is closed (merged or closed without merging) into the main branch.
 on:
   pull_request:
     branches: [main]
     types: [closed]
 jobs:
+  #This defines a job named "build" that runs on the latest version of the Ubuntu environment.
   build:
     name: Build Docker image
     runs-on: ubuntu-latest
     steps:
-      - 
+      - # This step checks out your Git repository content
         name: Checkout
         uses: actions/checkout@v4
-      - 
+      - # Uses the docker/login-action to log in to Docker Hub using the provided username and token.
+        # The credentials are stored as secrets (DOCKERHUB_USERNAME and DOCKERHUB_TOKEN).
         name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
+      - # Extracts the repository name from the GitHub repository full name and sets it as an environment variable (REPO_NAME). 
+        # This information can be useful for later steps.
         name: Get repository name
         run: |
           repo_full_name="$GITHUB_REPOSITORY"
           IFS='/' read -ra repo_parts <<< "$repo_full_name"
           echo "REPO_NAME=${repo_parts[1]}" >> $GITHUB_ENV
 
-      - 
+      - # Uses the docker/metadata-action to extract metadata such as tags and labels for Docker. 
+        # This metadata can be used for versioning and labeling Docker images.
         name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -33,7 +38,8 @@ jobs:
           tags: |
             type=sha,format=short 
 
-      -
+      - # Uses the docker/build-push-action to build and push the Docker image. It specifies the context as the current directory (.), the Dockerfile location (./Dockerfile), tags from the metadata, and labels from the metadata. 
+        # The push: true indicates that the image should be pushed to the Docker Hub registry.
         name: Build and push
         uses: docker/build-push-action@v5
         with:
